@@ -55,26 +55,6 @@ export default function QuizCard() {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const handleContextMenu = (e) => {
-      e.preventDefault(); 
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        navigate("/warning"); 
-      }
-    };
-
-    document.addEventListener("contextmenu", handleContextMenu);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener("contextmenu", handleContextMenu);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [navigate]);
-
   const startIndex = (currentPage - 1) * questionsPerPage;
   const currentQuestions = shuffledQuestions.slice(
     startIndex,
@@ -87,41 +67,20 @@ export default function QuizCard() {
     localStorage.setItem("userAnswers", JSON.stringify(updatedAnswers));
   };
 
-  const handleNextPage = () => {
-    setCurrentPage((prev) =>
-      Math.min(prev + 1, Math.ceil(shuffledQuestions.length / questionsPerPage))
-    );
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setIsSubmitted(true);
     const submissionData = {
+      _id: Date.now().toString(),
       userAnswers,
       timestamp: new Date(),
     };
 
-    try {
-      const response = await fetch("https://quiz-cloud-6ex5.vercel.app/api/submissions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(submissionData),
-      });
+    const savedSubmissions = JSON.parse(localStorage.getItem("submissions") || "[]");
+    savedSubmissions.push(submissionData);
+    localStorage.setItem("submissions", JSON.stringify(savedSubmissions));
 
-      if (!response.ok) {
-        throw new Error("Failed to submit answers");
-      }
-
-      console.log("Submission successful:", await response.json());
-      navigate("/success");
-    } catch (error) {
-      console.error("Error submitting answers:", error);
-    }
+    console.log("Submission saved to local storage:", submissionData);
+    navigate("/success");
   };
 
   const formatTime = (time) => {
@@ -138,7 +97,7 @@ export default function QuizCard() {
 
   return (
     <section className="quiz-section container-fluid">
-      <div className="quiz-card" style={{ userSelect: "none" }}> 
+      <div className="quiz-card" style={{ userSelect: "none" }}>
         <header className="quiz-header">
           <h2>Quiz</h2>
           {user && (
@@ -173,15 +132,14 @@ export default function QuizCard() {
           ))}
         </div>
         <div className="navigation-container">
-          <button disabled={currentPage === 1} onClick={handlePrevPage}>
+          <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
             Previous
           </button>
           <button
             disabled={
-              currentPage ===
-              Math.ceil(shuffledQuestions.length / questionsPerPage)
+              currentPage === Math.ceil(shuffledQuestions.length / questionsPerPage)
             }
-            onClick={handleNextPage}
+            onClick={() => setCurrentPage(currentPage + 1)}
           >
             Next
           </button>
@@ -191,8 +149,7 @@ export default function QuizCard() {
             Page {currentPage} of{" "}
             {Math.ceil(shuffledQuestions.length / questionsPerPage)}
           </p>
-          {currentPage ===
-            Math.ceil(shuffledQuestions.length / questionsPerPage) &&
+          {currentPage === Math.ceil(shuffledQuestions.length / questionsPerPage) &&
           allQuestionsAnswered() &&
           !isSubmitted ? (
             <button className="export-answer" onClick={handleSubmit}>

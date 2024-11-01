@@ -1,49 +1,29 @@
-// src/components/AdminDashboard.js
 import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../hooks/firebaseConfig";
 
 export default function AdminDashboard() {
   const [submissions, setSubmissions] = useState([]);
   const [userEmail, setUserEmail] = useState("");
 
-  const fetchSubmissions = async () => {
-    try {
-      const response = await fetch("https://quiz-cloud-6ex5.vercel.app/api/submissions");
-      const data = await response.json();
-      setSubmissions(data);
-    } catch (error) {
-      console.error("Error fetching submissions:", error);
-    }
+  // Load submissions from local storage
+  const loadSubmissions = () => {
+    const savedSubmissions = JSON.parse(localStorage.getItem("submissions") || "[]");
+    setSubmissions(savedSubmissions);
   };
 
   useEffect(() => {
-    fetchSubmissions();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserEmail(user.email);
-      } else {
-        setUserEmail("");
-      }
-    });
-    return () => unsubscribe();
+    loadSubmissions();
+    // Mock user authentication
+    setUserEmail(localStorage.getItem("userEmail") || "testuser@example.com");
   }, []);
 
-  const deleteSubmission = async (id) => {
-    try {
-      await fetch(`https://quiz-cloud-6ex5.vercel.app/api/submissions/${id}`, {
-        method: "DELETE",
-      });
-      // Refresh the list after deletion
-      setSubmissions(submissions.filter((submission) => submission._id !== id));
-    } catch (error) {
-      console.error("Error deleting submission:", error);
-    }
+  const deleteSubmission = (id) => {
+    const updatedSubmissions = submissions.filter((submission) => submission._id !== id);
+    setSubmissions(updatedSubmissions);
+    localStorage.setItem("submissions", JSON.stringify(updatedSubmissions));
   };
 
   const formatAnswers = (userAnswers = {}, correctAnswers = {}) => {
-    if (!userAnswers || typeof userAnswers !== "object") return [];
     return Object.entries(userAnswers).map(([question, answer]) => ({
       question,
       answer,
@@ -54,13 +34,8 @@ export default function AdminDashboard() {
   const exportToXLSX = () => {
     let worksheetData = [];
     submissions.forEach((submission) => {
-      const correctAnswers = submission.correctAnswers || {}; // Ensure this is defined
-
-      const answerResults = formatAnswers(
-        submission.userAnswers,
-        correctAnswers // Pass the correct answers for comparison
-      );
-
+      const correctAnswers = submission.correctAnswers || {};
+      const answerResults = formatAnswers(submission.userAnswers, correctAnswers);
       const score = answerResults.filter((a) => a.isCorrect === "Correct").length;
 
       worksheetData.push({
@@ -87,7 +62,6 @@ export default function AdminDashboard() {
     const worksheet = XLSX.utils.json_to_sheet(worksheetData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Submissions");
-
     XLSX.writeFile(workbook, "submissions.xlsx");
   };
 
@@ -111,9 +85,7 @@ export default function AdminDashboard() {
               submission.userAnswers || {},
               submission.correctAnswers || {}
             );
-            const score = answerResults.filter(
-              (a) => a.isCorrect === "Correct"
-            ).length;
+            const score = answerResults.filter((a) => a.isCorrect === "Correct").length;
 
             return (
               <tr key={submission._id}>
@@ -122,10 +94,7 @@ export default function AdminDashboard() {
                 <td>{new Date(submission.timestamp).toLocaleString()}</td>
                 <td>{score}</td>
                 <td>
-                  <button
-                    onClick={exportToXLSX}
-                    disabled={submissions.length === 0}
-                  >
+                  <button onClick={exportToXLSX} disabled={submissions.length === 0}>
                     Export to XLSX
                   </button>
                 </td>
