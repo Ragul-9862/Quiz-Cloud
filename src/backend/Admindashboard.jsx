@@ -10,7 +10,7 @@ export default function AdminDashboard() {
 
   const fetchSubmissions = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/submissions");
+      const response = await fetch("https://quiz-cloud-6ex5.vercel.app/api/submissions");
       const data = await response.json();
       setSubmissions(data);
     } catch (error) {
@@ -32,7 +32,7 @@ export default function AdminDashboard() {
 
   const deleteSubmission = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/submissions/${id}`, {
+      await fetch(`https://quiz-cloud-6ex5.vercel.app/api/submissions/${id}`, {
         method: "DELETE",
       });
       // Refresh the list after deletion
