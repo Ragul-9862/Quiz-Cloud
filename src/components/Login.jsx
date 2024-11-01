@@ -1,6 +1,5 @@
 // Login.js
 import React, { useState } from "react";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../hooks/firebaseConfig"; // Import auth from firebaseConfig.js
 import { useNavigate } from "react-router-dom";
@@ -78,7 +77,7 @@ export default function Login() {
                       onClick={togglePasswordVisibility}
                       className="password-toggle-icon"
                     >
-                      {passwordVisible ? <FaRegEyeSlash /> : <FaRegEye />}
+                   
                     </span>
                   </div>
                   <div className="d-flex justify-content-center">
