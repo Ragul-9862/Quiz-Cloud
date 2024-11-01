@@ -57,12 +57,12 @@ export default function QuizCard() {
 
   useEffect(() => {
     const handleContextMenu = (e) => {
-      e.preventDefault(); // Prevent right-click context menu
+      e.preventDefault(); 
     };
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        navigate("/warning"); // Navigate to the warning page
+        navigate("/warning"); 
       }
     };
 

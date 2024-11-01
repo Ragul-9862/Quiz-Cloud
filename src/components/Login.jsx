@@ -1,9 +1,10 @@
-
+// src/components/Login.js
 import React, { useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../hooks/firebaseConfig";
 import { useNavigate } from "react-router-dom";
-import quiz from "../assets/images/login/login.gif"; 
+import quiz from "../assets/images/login/login.png"; 
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -77,7 +78,7 @@ export default function Login() {
                       onClick={togglePasswordVisibility}
                       className="password-toggle-icon"
                     >
-                      <i className={`bi ${passwordVisible ? 'bi-eye-slash' :'bi-eye'}`}></i>
+                      {passwordVisible ? <FaRegEyeSlash /> : <FaRegEye />}
                     </span>
                   </div>
                   <div className="d-flex justify-content-center">
