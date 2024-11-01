@@ -105,7 +105,7 @@ export default function QuizCard() {
     };
 
     try {
-      const response = await fetch("https://clouddreamsnewsquiz.netlify.app/api/submissions", {
+      const response = await fetch("http://localhost:5000/api/submissions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,7 +138,7 @@ export default function QuizCard() {
 
   return (
     <section className="quiz-section container-fluid">
-      <div className="quiz-card" style={{ userSelect: "none" }}> {/* Prevent text selection */}
+      <div className="quiz-card" style={{ userSelect: "none" }}> 
         <header className="quiz-header">
           <h2>Quiz</h2>
           {user && (
