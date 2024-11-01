@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-// import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../hooks/firebaseConfig";
 import { useNavigate } from "react-router-dom";
-// import quiz from "../assets/images/login/login.png";
+import quiz from "../assets/images/login/login.png";
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -34,9 +34,9 @@ export default function Login() {
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-lg-6 d-none d-md-block">
-            {/* <div>
+            <div>
               <img className="img-fluid" src={quiz} alt="Quiz" />
-            </div> */}
+            </div>
           </div>
           <div className="col-lg-4 d-flex justify-content-center align-items-center">
             <div>
@@ -69,7 +69,7 @@ export default function Login() {
                       onClick={togglePasswordVisibility}
                       className="password-toggle-icon"
                     >
-                      {/* {passwordVisible ? <FaRegEyeSlash /> : <FaRegEye />} */}
+                      {passwordVisible ? <FaRegEyeSlash /> : <FaRegEye />}
                     </span>
                   </div>
                   <div className="d-flex justify-content-center">
