@@ -10,7 +10,7 @@ export default function AdminDashboard() {
 
   const fetchSubmissions = async () => {
     try {
-      const response = await fetch("https://quiz-99fp.vercel.app/api/submissions");
+      const response = await fetch("https://clouddreamsnewsquiz.netlify.app/api/submissions");
       const data = await response.json();
       setSubmissions(data);
     } catch (error) {
@@ -32,7 +32,7 @@ export default function AdminDashboard() {
 
   const deleteSubmission = async (id) => {
     try {
-      await fetch(`https://quiz-99fp.vercel.app//api/submissions/${id}`, {
+      await fetch(`https://clouddreamsnewsquiz.netlify.app/api/submissions/${id}`, {
         method: "DELETE",
       });
       // Refresh the list after deletion

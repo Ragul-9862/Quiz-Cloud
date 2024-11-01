@@ -105,7 +105,7 @@ export default function QuizCard() {
     };
 
     try {
-      const response = await fetch("https://quiz-99fp.vercel.app/api/submissions", {
+      const response = await fetch("https://clouddreamsnewsquiz.netlify.app/api/submissions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
