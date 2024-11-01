@@ -1,10 +1,10 @@
-// src/components/Login.js
+// Login.js
 import React, { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../hooks/firebaseConfig";
+import { auth } from "../hooks/firebaseConfig"; // Import auth from firebaseConfig.js
 import { useNavigate } from "react-router-dom";
-import quiz from "../assets/images/login/login.png"; 
+import quiz from "../assets/images/login/login.png";
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
