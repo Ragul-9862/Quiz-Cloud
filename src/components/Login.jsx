@@ -1,9 +1,9 @@
-// Login.js
 import React, { useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../hooks/firebaseConfig"; // Import auth from firebaseConfig.js
 import { useNavigate } from "react-router-dom";
-// import quiz from "../assets/images/login/login.png";
+import quiz from "../assets/images/login/login.png";
 
 export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -21,15 +21,7 @@ export default function Login() {
     setError(null);
 
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Save user information in local storage
-      localStorage.setItem("user", JSON.stringify(user));
+      await signInWithEmailAndPassword(auth, email, password);
       navigate("/quizcard");
     } catch (err) {
       console.error("Login error:", err);
@@ -42,9 +34,9 @@ export default function Login() {
       <div className="container">
         <div className="row d-flex justify-content-center">
           <div className="col-lg-6 d-none d-md-block">
-            {/* <div>
+            <div>
               <img className="img-fluid" src={quiz} alt="Quiz" />
-            </div> */}
+            </div>
           </div>
           <div className="col-lg-4 d-flex justify-content-center align-items-center">
             <div>
@@ -76,7 +68,9 @@ export default function Login() {
                     <span
                       onClick={togglePasswordVisibility}
                       className="password-toggle-icon"
-                    ></span>
+                    >
+                      {passwordVisible ? <FaRegEyeSlash /> : <FaRegEye />}
+                    </span>
                   </div>
                   <div className="d-flex justify-content-center">
                     <button type="submit" className="btn btn-dark">
